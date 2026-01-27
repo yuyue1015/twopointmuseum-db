@@ -53,7 +53,7 @@ export default function MuseumSearchApp() {
             双点博物馆 <span className="text-blue-600">档案库</span>
           </h1>
           <p className="text-slate-500 text-sm md:text-lg">
-            已收录 {EXHIBITS_DATA.length} 件珍稀展品数据
+            已收录 {id.length} 件珍稀展品数据
           </p>
         </div>
 
@@ -195,3 +195,4 @@ function StatItem({ icon, label, value }: { icon: any, label: string, value: str
     </div>
   );
 }
+
