@@ -173,16 +173,6 @@ function ExhibitCard({ data }: { data: Exhibit }) {
             label="基础热议" 
             value={data.base_buzz || '-'} 
           />
-          <StatItem 
-            icon={<Zap className="w-4 h-4 text-yellow-500" />} 
-            label="最大热议" 
-            value={data.max_buzz || '-'} 
-          />
-          <StatItem 
-            icon={<BookOpen className="w-4 h-4 text-blue-500" />} 
-            label="知识量" 
-            value={data.max_knowledge || '-'} 
-          />
         </div>
 
         {/* 特性标签 */}
@@ -213,3 +203,4 @@ function StatItem({ icon, label, value }: { icon: any, label: string, value: str
     </div>
   );
 }
+
