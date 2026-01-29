@@ -128,7 +128,7 @@ export default function MuseumSearchApp() {
         <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-6 py-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
            <span className="text-slate-600 font-bold">欢迎关注 <span className="text-red-500">悦小白游戏记</span></span>
            <span className="hidden sm:block text-slate-300">|</span>
-           <span className="text-slate-400 font-medium text-sm">小红书 @悦小白游戏记</span>
+     
         </div>
       </footer>
     </div>
@@ -185,3 +185,4 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
+
