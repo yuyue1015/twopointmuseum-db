@@ -1,15 +1,10 @@
 /** @type {import('next').NextConfig} */
-
-// 这里填你的 GitHub 仓库名 (例如你的仓库是 TPMoption)
-const repoName = 'TPMoption'; 
-
 const nextConfig = {
+  // 开启静态导出，Cloudflare Pages 需要这个
   output: 'export',
-  images: { unoptimized: true },
   
-  // 核心修改：让 Next.js 知道它运行在子目录下
-  basePath: isProd ? `/${repoName}` : '',
-  assetPrefix: isProd ? `/${repoName}/` : '',
+  // 必须关闭图片优化，因为 Cloudflare Pages 没有 Node.js 服务器来压缩图片
+  images: { unoptimized: true },
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
