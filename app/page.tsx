@@ -122,15 +122,26 @@ export default function MuseumSearchApp() {
         )}
       </div>
 
-      {/* 底部关注信息 */}
-      <footer className="mt-20 pb-12 text-center border-t border-slate-200 pt-10">
-        <p className="text-slate-400 text-xs mb-4 uppercase tracking-widest">Data Archive System | 仅供参考</p>
-        <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-6 py-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
-           <span className="text-slate-600 font-bold">欢迎关注 <span className="text-red-500">悦小白游戏记</span></span>
-           <span className="hidden sm:block text-slate-300">|</span>
-     
-        </div>
-      </footer>
+{/* 底部关注信息 */}
+<footer className="mt-20 pb-12 text-center border-t border-slate-200 pt-10">
+  <p className="text-slate-400 text-xs mb-4 uppercase tracking-widest">Data Archive System | 仅供参考</p>
+  <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-6 py-3 bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <span className="text-slate-600 font-bold">
+      欢迎关注 
+      {/* 增加超链接部分 */}
+      <a 
+        href="https://xhslink.com/m/4fdFysr8G7t" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="text-red-500 hover:text-red-600 hover:underline decoration-2 underline-offset-4 transition-all ml-1"
+      >
+        悦小白游戏记
+      </a>
+    </span>
+    <span className="hidden sm:block text-slate-300">|</span>
+    <span className="text-slate-400 font-medium text-sm">小红书 @悦小白游戏记</span>
+  </div>
+</footer>
     </div>
   );
 }
@@ -185,4 +196,5 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
+
 
