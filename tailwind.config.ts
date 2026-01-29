@@ -1,17 +1,23 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  // 核心修正：
-  // 1. 去掉了 src/ 前缀
-  // 2. 确保它去扫描 app 文件夹（因为你用的是 App Router）
+  // 核心修复：移除 src/，直接指向根目录的 app
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    // 如果你有 pages 文件夹也加上，没有也不影响
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}", 
   ],
   theme: {
-    extend: {},
+    extend: {
+      // 可以在这里扩展自定义颜色，例如博物馆的主题色
+      colors: {
+        museum: {
+          50: '#fcfaf8',
+          100: '#f6f1eb',
+          500: '#d97706', // 琥珀色/橙色作为主色调
+          900: '#451a03',
+        }
+      }
+    },
   },
   plugins: [],
 };
