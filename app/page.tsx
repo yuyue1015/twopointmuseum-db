@@ -135,18 +135,21 @@ export default function MuseumSearchApp() {
 
 function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
   return (
-    <div className="group relative flex flex-col md:flex-row gap-6 py-8 border-b-2 border-dashed border-slate-200 last:border-0">
-      {/* 左侧：图标占位 */}
-      <div className={`w-full md:w-40 h-32 rounded-2xl flex items-center justify-center border shrink-0 transition-all group-hover:shadow-md ${getCategoryColor(data.category)}`}>
-        <Layers className="opacity-20" size={40} />
-      </div>
-
-      {/* 右侧：内容 */}
+    /* 这里的 gap-6 可以保留，或者改为 gap-4 */
+    <div className="group relative flex flex-col md:flex-row gap-4 py-8 border-b-2 border-dashed border-slate-200 last:border-0">
+      
+      {/* 左侧图标已删除，右侧内容现在占据全部宽度 */}
       <div className="flex-1">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-            {highlightText(data.name, keyword)}
-          </h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+              {highlightText(data.name, keyword)}
+            </h3>
+            {/* 既然去掉了左边的色块，建议在这里加一个彩色小标签，方便辨识类别 */}
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-black border ${getCategoryColor(data.category)}`}>
+              {data.category}
+            </span>
+          </div>
           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 bg-slate-100 px-2 py-1 rounded">
             ID: {data.id}
           </span>
@@ -161,6 +164,7 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
 
         <div className="flex items-center gap-2 text-sm text-slate-600 mb-4 font-medium">
           <MapPin className="w-4 h-4 text-slate-400" />
+          <span className="text-slate-400">来源：</span>
           {highlightText(data.source || '未知来源', keyword)}
         </div>
 
@@ -168,7 +172,7 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
         {data.traits && data.traits.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {data.traits.map((trait, i) => (
-              <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-500">
+              <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs font-bold text-slate-500 shadow-sm">
                 # {highlightText(trait, keyword)}
               </span>
             ))}
@@ -178,3 +182,4 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
+
