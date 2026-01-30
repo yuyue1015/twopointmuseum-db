@@ -63,19 +63,33 @@ export default function MuseumSearchApp() {
   }, [query, searchType]);
 
   return (
-    // 1. 缩小整体页面上下内边距
-    <div className="py-4 md:py-8 flex flex-col min-h-screen">
-      {/* 2. 缩小标题区域间距 (mb-10 -> mb-4) */}
+    <div className="py-2 md:py-6 flex flex-col min-h-screen antialiased">
+      
+      {/* 顶部 Banner - 点击返回主页 */}
+      <div className="max-w-4xl mx-auto w-full mb-4 px-0">
+        <a href="/" className="block group relative w-full aspect-[3/1] overflow-hidden rounded-2xl shadow-sm border border-slate-200 bg-slate-100 transition-all hover:shadow-md">
+          <img 
+            src="/banner.png" 
+            alt="双点博物馆展品库"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          {/* Banner 悬浮装饰层 */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent flex flex-col justify-end p-4 md:p-6">
+            <h1 className="text-xl md:text-3xl font-black text-white tracking-tight drop-shadow-md">
+              双点博物馆 <span className="text-blue-400">展品库</span>
+            </h1>
+          </div>
+        </a>
+      </div>
+
+      {/* 状态统计 */}
       <div className="text-center mb-4">
-        <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-1 tracking-tight">
-          双点博物馆 <span className="text-blue-600">展品库</span>
-        </h1>
-        <p className="text-slate-400 text-xs font-medium">
-          已收录 {EXHIBITS_DATA.length} 件展品资料
+        <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+          Database Archive • {EXHIBITS_DATA.length} Records Loaded
         </p>
       </div>
 
-      {/* 3. 缩小搜索框外边距 (mb-12 -> mb-4) */}
+      {/* 搜索框 */}
       <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 mb-4 sticky top-2 z-10 max-w-2xl mx-auto flex gap-2 w-full">
         <select
           className="pl-3 pr-7 py-2 rounded-lg border-none bg-slate-100 text-slate-700 font-bold text-xs focus:ring-2 focus:ring-blue-500 cursor-pointer"
@@ -92,19 +106,19 @@ export default function MuseumSearchApp() {
           <Search className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
           <input
             className="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-100 border-none text-[16px] focus:ring-2 focus:ring-blue-500"
-            placeholder="搜索展品名称（如：左脚印化石..."
+            placeholder="搜索展品信息（如：左脚印化石..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
       </div>
 
-      {/* 4. 结果列表容器：移除强制最小高度 min-h-[400px]，缩小 mt-20 -> mt-6 */}
-      <div className="flex-1">
+      {/* 结果列表 */}
+      <div className="flex-1 w-full max-w-4xl mx-auto">
         {!query ? (
           <div className="flex flex-col items-center text-slate-200 mt-6 mb-6">
-            <Sparkles className="w-12 h-12 mb-2 opacity-20" />
-            <p className="text-sm font-medium">输入关键词开始检索</p>
+            <Sparkles className="w-10 h-10 mb-2 opacity-20" />
+            <p className="text-sm font-medium text-slate-400">输入关键词开启检索</p>
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -123,7 +137,7 @@ export default function MuseumSearchApp() {
         )}
       </div>
 
-      {/* 5. 缩小底部页脚间距 (mt-20 -> mt-8) */}
+      {/* 底部页脚 */}
       <footer className="mt-8 pb-8 text-center border-t border-slate-100 pt-6">
         <p className="text-slate-300 text-[10px] mb-3 uppercase tracking-widest">Data Archive System | 仅供参考</p>
         <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-5 py-2.5 bg-white rounded-xl border border-slate-100 shadow-sm">
@@ -192,4 +206,3 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
-
