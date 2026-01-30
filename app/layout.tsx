@@ -82,7 +82,7 @@ export default function MuseumSearchApp() {
           双点博物馆 <span className="text-blue-600">展品库</span>
         </h1>
         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-          已收录 • {EXHIBITS_DATA.length}  • 个展品
+          已收录 • {EXHIBITS_DATA.length}  • 件展品
         </p>
       </div>
 
@@ -203,3 +203,4 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
+
