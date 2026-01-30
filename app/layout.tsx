@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: {
-    default: "双点博物馆展品档案库",
-    template: "%s · 双点博物馆展品档案库",
+  title: "双点博物馆档案库 | 悦小白游戏记",
+  description: "双点博物馆全展品档案查询系统。",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "博物馆档案",
   },
-  description: "双点博物馆展品搜索与资料查询系统",
-  applicationName: "Two Point Museum DB",
-  authors: [{ name: "Two Point Museum" }],
-  robots: {
-    index: true,
-    follow: true,
+  // 关键：确保 iOS 桌面图标显示
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 };
 
@@ -33,3 +35,4 @@ export default function RootLayout({
     </html>
   );
 }
+
