@@ -65,28 +65,31 @@ export default function MuseumSearchApp() {
   return (
     <div className="py-4 md:py-8 flex flex-col min-h-screen antialiased">
       
-      {/* 顶部 Banner - 缩小至 50% 宽度并居中 */}
-      <div className="max-w-[50%] mx-auto w-full mb-4">
-        <a href="/" className="block group relative overflow-hidden rounded-xl shadow-sm border border-slate-100 transition-all hover:shadow-md">
+      {/* 顶部 Banner */}
+      <div className="w-full flex justify-center mb-6">
+        <a 
+          href="/" 
+          className="block w-[70%] md:w-[40%] max-w-[400px] aspect-[3/1] relative overflow-hidden rounded-xl shadow-sm border border-slate-100 bg-slate-50 transition-all hover:shadow-md"
+        >
           <img 
             src="/banner.png" 
-            alt="双点博物馆档案库"
-            className="w-full h-auto object-contain"
+            alt="双点博物馆展品库"
+            className="w-full h-full object-contain"
           />
         </a>
       </div>
 
-      {/* 标题区域 - 恢复到图片下方 */}
+      {/* 标题区域 - 已更新为“展品库” */}
       <div className="text-center mb-4">
         <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-1 tracking-tight">
-          双点博物馆 <span className="text-blue-600">档案库</span>
+          双点博物馆 <span className="text-blue-600">展品库</span>
         </h1>
         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-          Database Archive • {EXHIBITS_DATA.length} Records Loaded
+          Museum Exhibits • {EXHIBITS_DATA.length} Records Loaded
         </p>
       </div>
 
-      {/* 搜索框 */}
+      {/* 搜索框 - 已更新提示语 */}
       <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 mb-4 sticky top-2 z-10 max-w-2xl mx-auto flex gap-2 w-full">
         <select
           className="pl-3 pr-7 py-2 rounded-lg border-none bg-slate-100 text-slate-700 font-bold text-xs focus:ring-2 focus:ring-blue-500 cursor-pointer"
@@ -103,7 +106,7 @@ export default function MuseumSearchApp() {
           <Search className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
           <input
             className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-100 border-none text-[16px] focus:ring-2 focus:ring-blue-500"
-            placeholder="搜索档案信息..."
+            placeholder="搜索展品信息（如：左脚印化石...）"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -127,7 +130,7 @@ export default function MuseumSearchApp() {
               </div>
             ) : (
               <div className="text-center py-12 text-slate-400 text-sm italic">
-                没有找到相关的档案记录
+                没有找到相关的展品记录
               </div>
             )}
           </div>
@@ -136,7 +139,7 @@ export default function MuseumSearchApp() {
 
       {/* 底部页脚 */}
       <footer className="mt-8 pb-8 text-center border-t border-slate-100 pt-6">
-        <p className="text-slate-300 text-[10px] mb-3 uppercase tracking-widest">Data Archive System | 仅供参考</p>
+        <p className="text-slate-300 text-[10px] mb-3 uppercase tracking-widest">Exhibit Guide System | 仅供参考</p>
         <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-5 py-2.5 bg-white rounded-xl border border-slate-100 shadow-sm">
           <span className="text-slate-600 font-bold text-sm">
             欢迎关注 
