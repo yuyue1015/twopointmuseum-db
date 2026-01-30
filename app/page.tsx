@@ -1,16 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import {
-  Search,
-  MapPin,
-  Tag,
-  Sparkles
-} from 'lucide-react';
+import { useState, useMemo, useEffect } from 'react';
+import { Search, MapPin, Tag, Sparkles } from 'lucide-react';
 import { EXHIBITS_DATA, Exhibit } from './data';
 
 /* ================= 工具函数 ================= */
-
 const getCategoryColor = (category: string) => {
   const cat = category?.trim();
   if (cat === '史前') return 'bg-amber-50 text-amber-800 border-amber-200';
@@ -22,6 +16,7 @@ const getCategoryColor = (category: string) => {
 };
 
 function highlightText(text: string, keyword: string) {
+  if (!text) return '';
   if (!keyword.trim()) return text;
   const regex = new RegExp(`(${keyword})`, 'gi');
   const parts = text.split(regex);
@@ -37,13 +32,18 @@ function highlightText(text: string, keyword: string) {
 }
 
 /* ================= 页面主组件 ================= */
-
 export default function MuseumSearchApp() {
   const [query, setQuery] = useState('');
   const [searchType, setSearchType] = useState<'name' | 'category' | 'source' | 'traits'>('name');
+  
+  // 【重要修复】确保客户端渲染一致性
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const filteredExhibits = useMemo(() => {
-    if (!query.trim()) return [];
+    if (!query.trim() || !EXHIBITS_DATA) return [];
     const lowerQuery = query.toLowerCase().trim();
 
     return EXHIBITS_DATA.filter((item) => {
@@ -62,14 +62,19 @@ export default function MuseumSearchApp() {
     });
   }, [query, searchType]);
 
+  // 如果还在服务器端环境，返回一个空容器或骨架屏，防止 #418 错误
+  if (!isClient) {
+    return <div className="min-h-screen bg-slate-50" />;
+  }
+
   return (
-    <div className="py-4 md:py-8 flex flex-col min-h-screen antialiased">
+    <div className="py-4 md:py-8 flex flex-col min-h-screen antialiased bg-slate-50">
       
       {/* 顶部 Banner */}
-      <div className="w-full flex justify-center mb-6">
+      <div className="w-full flex justify-center mb-6 px-4">
         <a 
           href="/" 
-          className="block w-[70%] md:w-[40%] max-w-[400px] aspect-[3/1] relative overflow-hidden rounded-xl shadow-sm border border-slate-100 bg-slate-50 transition-all hover:shadow-md"
+          className="block w-[75%] md:w-[40%] max-w-[400px] aspect-[3/1] relative overflow-hidden rounded-xl shadow-sm border border-slate-100 bg-white transition-all hover:shadow-md"
         >
           <img 
             src="/banner.png" 
@@ -79,18 +84,18 @@ export default function MuseumSearchApp() {
         </a>
       </div>
 
-      {/* 标题区域 - 已更新为“展品库” */}
-      <div className="text-center mb-4">
+      {/* 标题区域 */}
+      <div className="text-center mb-4 px-4">
         <h1 className="text-2xl md:text-3xl font-black text-slate-900 mb-1 tracking-tight">
           双点博物馆 <span className="text-blue-600">展品库</span>
         </h1>
         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
-          Museum Exhibits • {EXHIBITS_DATA.length} Records Loaded
+          Museum Exhibits • {EXHIBITS_DATA?.length || 0} Records Loaded
         </p>
       </div>
 
-      {/* 搜索框 - 已更新提示语 */}
-      <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 mb-4 sticky top-2 z-10 max-w-2xl mx-auto flex gap-2 w-full">
+      {/* 搜索框 */}
+      <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-200 mb-4 sticky top-2 z-10 max-w-2xl mx-auto flex gap-2 w-[92%]">
         <select
           className="pl-3 pr-7 py-2 rounded-lg border-none bg-slate-100 text-slate-700 font-bold text-xs focus:ring-2 focus:ring-blue-500 cursor-pointer"
           value={searchType}
@@ -105,7 +110,7 @@ export default function MuseumSearchApp() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
           <input
-            className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-100 border-none text-[16px] focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-10 pr-4 py-2 rounded-lg bg-slate-100 border-none text-[16px] focus:ring-2 focus:ring-blue-500 shadow-none outline-none"
             placeholder="搜索展品信息（如：左脚印化石...）"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -114,11 +119,11 @@ export default function MuseumSearchApp() {
       </div>
 
       {/* 结果列表 */}
-      <div className="flex-1 w-full max-w-4xl mx-auto">
+      <div className="flex-1 w-full max-w-4xl mx-auto px-4">
         {!query ? (
-          <div className="flex flex-col items-center text-slate-200 mt-6 mb-6">
+          <div className="flex flex-col items-center text-slate-300 mt-10 mb-10">
             <Sparkles className="w-10 h-10 mb-2 opacity-20" />
-            <p className="text-sm font-medium text-slate-400">输入关键词开启检索</p>
+            <p className="text-sm font-medium">输入关键词开启检索</p>
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -138,7 +143,7 @@ export default function MuseumSearchApp() {
       </div>
 
       {/* 底部页脚 */}
-      <footer className="mt-8 pb-8 text-center border-t border-slate-100 pt-6">
+      <footer className="mt-8 pb-8 text-center border-t border-slate-100 pt-6 px-4">
         <p className="text-slate-300 text-[10px] mb-3 uppercase tracking-widest">Exhibit Guide System | 仅供参考</p>
         <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-5 py-2.5 bg-white rounded-xl border border-slate-100 shadow-sm">
           <span className="text-slate-600 font-bold text-sm">
@@ -160,8 +165,6 @@ export default function MuseumSearchApp() {
   );
 }
 
-/* ================= 展品卡片组件 ================= */
-
 function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
   return (
     <div className="group py-5 transition-colors hover:bg-slate-50/50 -mx-5 md:-mx-8 px-5 md:px-8">
@@ -176,23 +179,20 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
             </span>
           </div>
           <span className="shrink-0 text-[10px] font-mono font-bold text-slate-300">
-            #{data.id.toString().padStart(4, '0')}
+            #{data.id?.toString().padStart(4, '0') || '0000'}
           </span>
         </div>
-
         {data.subcategory && (
           <div className="mb-2 flex items-center gap-1.5 text-xs font-bold text-slate-400">
             <Tag size={12} className="text-blue-400" />
             {data.subcategory}
           </div>
         )}
-
         <div className="flex items-center gap-2 text-xs text-slate-600 mb-3 font-medium">
           <MapPin className="w-3.5 h-3.5 text-slate-300" />
           <span className="text-slate-400 text-[9px] font-black uppercase">Source:</span>
           {highlightText(data.source || '未知来源', keyword)}
         </div>
-
         {data.traits && data.traits.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {data.traits.map((trait, i) => (
