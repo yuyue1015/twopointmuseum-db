@@ -68,7 +68,7 @@ export default function MuseumSearchApp() {
       {/* 2. 缩小标题区域间距 (mb-10 -> mb-4) */}
       <div className="text-center mb-4">
         <h1 className="text-2xl md:text-4xl font-black text-slate-900 mb-1 tracking-tight">
-          双点博物馆 <span className="text-blue-600">档案库</span>
+          双点博物馆 <span className="text-blue-600">展品库</span>
         </h1>
         <p className="text-slate-400 text-xs font-medium">
           已收录 {EXHIBITS_DATA.length} 件展品资料
@@ -92,7 +92,7 @@ export default function MuseumSearchApp() {
           <Search className="absolute left-3 top-2.5 text-slate-400 w-4 h-4" />
           <input
             className="w-full pl-9 pr-4 py-2 rounded-lg bg-slate-100 border-none text-[16px] focus:ring-2 focus:ring-blue-500"
-            placeholder="搜索档案信息..."
+            placeholder="搜索展品名称（如：左脚印化石..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -192,3 +192,4 @@ function ExhibitCard({ data, keyword }: { data: Exhibit; keyword: string; }) {
     </div>
   );
 }
+
