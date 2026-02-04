@@ -261,11 +261,11 @@ export default function MuseumSearchApp() {
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-3 md:top-3.5 text-slate-400 w-4 h-4" />
                   <input
-                    className="w-full pl-10 pr-4 py-2 md:py-3 rounded-xl bg-slate-50 text-sm font-medium focus:bg-blue-50/50 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
-                    placeholder="搜索展品..."
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
+                  className="w-full pl-10 pr-4 py-2 md:py-3 rounded-xl bg-slate-50 text-base md:text-sm font-medium focus:bg-blue-50/50 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
+                   placeholder="搜索展品（如：化石）"
+                   value={query}
+                   onChange={(e) => setQuery(e.target.value)}
+                 />
                 </div>
               </div>
             </div>
@@ -430,4 +430,5 @@ function ExhibitCard({
     </div>
   );
 }
+
 
