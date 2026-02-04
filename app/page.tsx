@@ -17,7 +17,7 @@ const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '原始边境': { top: '13%', left: '70%' },
   '大树花园': { top: '28%', left: '75%' },
   '骷髅荒原': { top: '23%', left: '20%' },
-  '藤蔓之森': { top: '38%', left: '72%' },
+  '啃噬之森': { top: '38%', left: '72%' },
   '远古遗迹': { top: '33%', left: '57%' },
   '沉寂河流': { top: '53%', left: '63%' },
   '凋零之路': { top: '66%', left: '45%' },
@@ -444,5 +444,6 @@ function ExhibitCard({
     </div>
   );
 }
+
 
 
