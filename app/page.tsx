@@ -3,19 +3,19 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Search, MapPin, Tag, Sparkles, Map as MapIcon, List, Info, XCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-// ⚠️ 确保路径正确：如果 HandDrawnCircle.tsx 在 components 文件夹中，则使用 '../components/HandDrawnCircle'
+// ⚠️ 确保路径正确
 import HandDrawnCircle from '../components/HandDrawnCircle'; 
 import { EXHIBITS_DATA, Exhibit } from './data';
 
-/* ================= 1. 坐标配置系统 (最新更新) ================= */
+/* ================= 1. 坐标配置系统 ================= */
 const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '永逝之湖': { top: '12%', left: '22%' },
-  '迷乱沙丘': { top: '33%', left: '31%' }, // 已更新为最后一行修正的坐标
+  '迷乱沙丘': { top: '33%', left: '32%' },
   '焦油旷野': { top: '15%', left: '12%' },
   '冰霜之巅': { top: '10%', left: '54%' },
   '原始边境': { top: '13%', left: '68%' },
   '大脚花园': { top: '23%', left: '77%' },
-  '食人花丛林': { top: '9%', left: '85%' },
+  '食人花丛林': { top: '8%', left: '84%' },
   '肋骨荒原': { top: '23%', left: '23%' },
   '啃噬之森': { top: '35%', left: '76%' },
   '远古遗迹': { top: '33%', left: '56%' },
@@ -25,10 +25,10 @@ const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '霸王龙岩': { top: '83%', left: '20%' },
   '庞然巨岩': { top: '79%', left: '75%' },
   '草本绿野': { top: '73%', left: '8%' },
-  '隐士山丘': { top: '42%', left: '3%' },
-  '黑糖浆湖': { top: '28%', left: '3%' },
-  '终焉之湖': { top: '51%', left: '14%' },
-  '白费镇与徒劳镇的交界之地': { top: '71%', left: '61%' },
+  '隐士山丘': { top: '45%', left: '3%' },
+  '黑糖浆湖': { top: '30%', left: '3%' },
+  '终焉之湖': { top: '53%', left: '14%' },
+  '白费镇与徒劳镇的交界之地': { top: '71%', left: '60%' },
   '远古蛋黄穹顶': { top: '74%', left: '85%' },
 };
 
@@ -75,7 +75,6 @@ function InteractiveMap({
       <img src="/map.jpg" alt="Map" className="w-full h-auto object-cover opacity-80" />
       
       {Object.entries(MAP_LOCATIONS).map(([locName, coords]) => {
-        // ... (省略前面的数据处理代码，保持不变)
         const locExhibits = data.filter(i => i.source?.includes(locName));
         const hasResults = locExhibits.length > 0;
         const isSelected = activeLocation === locName;
@@ -89,7 +88,7 @@ function InteractiveMap({
             className="absolute z-10 flex items-center justify-center"
             style={{ top: coords.top, left: coords.left }}
           >
-             {/* ... (省略手绘圈代码，保持不变) */}
+             {/* 搜索高亮手绘圈 */}
              <AnimatePresence>
                {isSearchMatch && !isSelected && (
                  <div className="absolute inset-0 pointer-events-none">
@@ -106,27 +105,41 @@ function InteractiveMap({
               whileTap={{ scale: 0.9 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              {/* ★★★ 修改重点在此处 ★★★ 
-                  1. backdrop-blur-[2px] -> backdrop-blur-[1px] (模糊度降低)
-                  2. bg-white/10 -> bg-white/5 (背景透明度从10%降到5%)
-                  3. border-white/40 -> border-white/10 (边框透明度从40%降到10%)
-                  4. hover:bg-white/20 -> hover:bg-white/10 (悬停效果也相应变淡)
-              */}
+              {/* 交互点：极高透明度 */}
               <div className={`absolute inset-0 rounded-full backdrop-blur-[1px] border shadow-sm transition-colors duration-300
                  ${isSelected ? 'bg-transparent border-transparent' : 'bg-white/5 border-white/10 hover:bg-white/10'}`} 
               />
               
-              {/* ... (省略选中状态红圈和Tooltip代码，保持不变) */}
+              {/* 选中状态手绘圈 */}
               <AnimatePresence>
                 {isSelected && (
-                  <motion.div className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <motion.div 
+                    className="absolute inset-0"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
                      <HandDrawnCircle isSelected={true} />
                   </motion.div>
                 )}
               </AnimatePresence>
 
-              <div className={`... (省略 Tooltip className) ...`}>
-                {/* ... (省略 Tooltip 内容) ... */}
+              {/* ★★★ 修复后的 Tooltip (信息框) ★★★
+                  1. 位置：left-full (右侧)
+                  2. 样式：bg-white (纯白底), border-l-4 (左侧蓝条), border-slate-100 (外边框), shadow-xl (阴影)
+                  3. 交互：group-hover/pin 显示，isSelected 常显
+              */}
+              <div className={`
+                absolute left-full top-1/2 ml-3 -translate-y-1/2 w-32 md:w-48 z-50
+                bg-white rounded-xl p-2 md:p-3 
+                shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] 
+                border border-slate-100 border-l-4 border-l-blue-500 
+                origin-left transition-all duration-200 text-left
+                ${isSelected 
+                   ? 'opacity-100 scale-100 visible' 
+                   : 'opacity-0 scale-90 invisible group-hover/pin:opacity-100 group-hover/pin:scale-100 group-hover/pin:visible'
+                }
+              `}>
                 <h4 className="font-black text-slate-800 text-xs md:text-sm mb-1 truncate">{locName}</h4>
                 <div className="text-[10px] text-slate-500 leading-tight">
                   <span className="font-bold text-blue-600">发现 {locExhibits.length} 件</span>
@@ -153,15 +166,20 @@ export default function MuseumSearchApp() {
     setHasMounted(true);
   }, []);
 
-  // 处理模式切换：隐藏搜索栏、重置结果显示所有
   const handleSwitchMode = (mode: 'list' | 'map') => {
     setViewMode(mode);
-    setQuery(''); // 重置搜索词
-    setSelectedLocation(null); // 重置选中的地点
+    setQuery('');
+    setSelectedLocation(null);
   };
 
   const filteredExhibits = useMemo(() => {
     if (!hasMounted || !EXHIBITS_DATA) return [];
+    
+    // 初始状态不显示
+    if (!query.trim() && !selectedLocation) {
+        return [];
+    }
+    
     const lowerQuery = query.toLowerCase().trim();
 
     return EXHIBITS_DATA.filter((item) => {
@@ -207,10 +225,7 @@ export default function MuseumSearchApp() {
       {/* 顶部固定区域 (Header) */}
       <div className="flex-none pt-4 md:pt-6 px-4 pb-2 z-10 bg-slate-50">
         <div className="max-w-5xl mx-auto flex flex-col items-center justify-center gap-4 text-center">
-           <div className="w-full max-w-sm md:max-w-md mx-auto">
-              <img src="/banner.png" alt="双点博物馆" className="w-full h-auto object-contain rounded-xl shadow-sm" />
-           </div>
-
+           
            <div className="flex flex-col items-center gap-1">
              <h1 className="text-2xl md:text-3xl font-black text-slate-900">
                双点博物馆 <span className="text-blue-600">档案库</span>
@@ -239,7 +254,6 @@ export default function MuseumSearchApp() {
            </div>
         </div>
 
-        {/* 仅在列表模式下显示搜索栏 */}
         {viewMode === 'list' && (
           <div className="mt-4 max-w-3xl mx-auto animate-in fade-in slide-in-from-top-2 duration-300">
             <div className="bg-white p-2 rounded-2xl shadow-lg border border-slate-200 flex flex-col md:flex-row gap-2">
@@ -257,11 +271,11 @@ export default function MuseumSearchApp() {
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-3 md:top-3.5 text-slate-400 w-4 h-4" />
                   <input
-                  className="w-full pl-10 pr-4 py-2 md:py-3 rounded-xl bg-slate-50 text-base md:text-sm font-medium focus:bg-blue-50/50 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
-                   placeholder="搜索展品（如：化石）"
-                   value={query}
-                   onChange={(e) => setQuery(e.target.value)}
-                 />
+                    className="w-full pl-10 pr-4 py-2 md:py-3 rounded-xl bg-slate-50 text-base md:text-sm font-medium focus:bg-blue-50/50 focus:ring-2 focus:ring-blue-500 transition-all outline-none"
+                    placeholder="搜索展品..."
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
                 </div>
               </div>
             </div>
@@ -320,7 +334,14 @@ export default function MuseumSearchApp() {
                      </button>
                   </div>
                 )}
-                {filteredExhibits.length > 0 ? (
+                
+                {!query && !selectedLocation ? (
+                  <div className="flex flex-col items-center justify-center py-12 text-slate-300">
+                    <Sparkles className="w-16 h-16 mb-4 opacity-50 text-blue-200" />
+                    <p className="text-lg font-medium text-slate-400">请输入关键词开始探索档案库</p>
+                    <p className="text-xs mt-2 text-slate-300">支持搜索名称、类别、特性或地点</p>
+                  </div>
+                ) : filteredExhibits.length > 0 ? (
                   <div className="divide-y divide-slate-100">
                     {filteredExhibits.map((item) => (
                       <ExhibitCard 
@@ -426,6 +447,3 @@ function ExhibitCard({
     </div>
   );
 }
-
-
-
