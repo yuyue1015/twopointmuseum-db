@@ -2,11 +2,13 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { Search, MapPin, Tag, Sparkles, Map as MapIcon, List, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+// ⚠️ 请确保这个路径正确指向你刚才创建的文件
+import HandDrawnCircle from '@/components/HandDrawnCircle'; 
 import { EXHIBITS_DATA, Exhibit } from './data';
 
 /* ================= 1. 坐标配置系统 ================= */
-// ⚠️ 这里的 Key (如"永逝之湖") 需要是 data.ts 中 source 字段的一部分
-// 例如：数据是 "白骨带 - 永逝之湖"，这里写 "永逝之湖" 即可匹配
+// 这里的 Key 需要对应 data.ts 中 source 字段的关键词
 const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '永逝之湖': { top: '12%', left: '32%' },
   '迷乱沙丘': { top: '45%', left: '48%' },
@@ -23,7 +25,6 @@ const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '霸王龙岩': { top: '85%', left: '25%' },
   '庞然巨岩': { top: '80%', left: '80%' },
   '草本绿野': { top: '75%', left: '10%' },
-  // 如果有新地点，继续在这里添加...
 };
 
 /* ================= 工具函数 ================= */
@@ -64,68 +65,94 @@ function InteractiveMap({
   activeLocation: string | null;
   onLocationSelect: (loc: string) => void;
 }) {
-  // 获取当前所有展品的来源列表
-  const activeSources = data.map(item => item.source || '');
-
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden shadow-xl border-4 border-slate-800/10 bg-slate-100 group select-none">
+    // ⚠️ 注意：这里移除了外层的 group 类，避免鼠标进入地图区域就触发所有 Tooltip
+    <div className="relative w-full rounded-2xl overflow-hidden shadow-xl border-4 border-slate-800/10 bg-slate-100 select-none">
       {/* 地图底图 */}
-      <img src="/map.jpg" alt="Map" className="w-full h-auto object-cover" />
+      <img src="/map.jpg" alt="Map" className="w-full h-auto object-cover opacity-80" />
       
-      {/* 遍历坐标点生成图标 */}
+      {/* 遍历坐标点 */}
       {Object.entries(MAP_LOCATIONS).map(([locName, coords]) => {
-        // 核心匹配逻辑：数据源 "白骨带 - 永逝之湖" 包含 "永逝之湖" 吗？
-        // 如果包含，说明这个地点有相关展品
         const locExhibits = data.filter(i => i.source?.includes(locName));
         const hasResults = locExhibits.length > 0;
         
-        // 判断该点是否被高亮选中
-        const isActive = activeLocation === locName;
-        
-        // 如果不在搜索结果中，且没有高亮，则隐藏 (仅在有搜索词时生效)
-        // 如果没有搜索词(query为空)，则默认显示所有地图点
-        if (query && !hasResults && !isActive) return null;
+        const isSelected = activeLocation === locName;
+        const isSearchMatch = query.length > 0 && hasResults;
+
+        // 如果处于搜索模式，且该地点没有结果，也不是当前选中的点，则隐藏
+        if (query && !hasResults && !isSelected) return null;
 
         return (
           <div
             key={locName}
-            className="absolute z-10"
+            className="absolute z-10 flex items-center justify-center"
             style={{ top: coords.top, left: coords.left }}
           >
-            {/* 图标主体 */}
-            <div 
+             {/* 搜索结果高亮圈 
+                逻辑：有搜索内容 且 匹配 且 当前没被选中（选中会显示另一个圈）
+             */}
+             <AnimatePresence>
+               {isSearchMatch && !isSelected && (
+                 <div className="absolute inset-0 pointer-events-none">
+                    <HandDrawnCircle isSelected={false} />
+                 </div>
+               )}
+             </AnimatePresence>
+
+            {/* 交互点按钮 
+                ★ 关键修改：添加 'group/pin'。
+                Tailwind 的 Named Groups 允许我们隔离 Hover 状态。
+                只有鼠标悬浮在这个特定的 button 上时，group-hover/pin 才会生效。
+            */}
+            <motion.button
               onClick={() => onLocationSelect(locName)}
-              className={`
-                relative -translate-x-1/2 -translate-y-1/2 cursor-pointer transition-all duration-300
-                flex items-center justify-center rounded-full border-2 
-                ${isActive 
-                  ? 'w-16 h-16 bg-blue-500/90 border-white scale-110 shadow-[0_0_30px_rgba(59,130,246,0.8)] z-50' 
-                  : 'w-8 h-8 bg-slate-900/60 border-white/80 hover:scale-[2.5] hover:bg-blue-500 hover:z-40'
-                }
-              `}
+              className="relative w-10 h-10 rounded-full flex items-center justify-center focus:outline-none z-20 group/pin"
+              initial={false}
+              whileHover={{ scale: 1.4 }} 
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-white animate-pulse' : 'bg-white/80'}`} />
+              {/* 全透明磨砂玻璃背景 */}
+              <div className={`absolute inset-0 rounded-full backdrop-blur-[2px] border shadow-sm transition-colors duration-300
+                 ${isSelected ? 'bg-transparent border-transparent' : 'bg-white/10 border-white/40 hover:bg-white/20'}`} 
+              />
               
-              {/* 悬浮/选中时的详情弹窗 */}
+              {/* 选中状态的红色手绘圈 */}
+              <AnimatePresence>
+                {isSelected && (
+                  <motion.div 
+                    className="absolute inset-0"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                     <HandDrawnCircle isSelected={true} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* 悬浮提示框 (Tooltip) 
+                 逻辑：
+                 1. isSelected ? 常显 (visible opacity-100)
+                 2. group-hover/pin ? 显示 (visible opacity-100)
+                 3. 默认 ? 隐藏 (invisible opacity-0)
+              */}
               <div className={`
-                absolute left-full top-1/2 ml-4 -translate-y-1/2 w-48 bg-white/95 backdrop-blur rounded-xl p-3 shadow-2xl border-l-4 border-blue-500
-                transition-all duration-200 origin-left pointer-events-none z-[60]
-                ${isActive ? 'opacity-100 scale-100 visible' : 'opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible'}
+                absolute left-full top-1/2 ml-3 -translate-y-1/2 w-48 
+                bg-white/95 backdrop-blur rounded-xl p-3 shadow-2xl border-l-4 border-blue-500 
+                origin-left pointer-events-none z-50 transition-all duration-200
+                ${isSelected 
+                   ? 'opacity-100 scale-100 visible' 
+                   : 'opacity-0 scale-90 invisible group-hover/pin:opacity-100 group-hover/pin:scale-100 group-hover/pin:visible'
+                }
               `}>
                 <h4 className="font-black text-slate-800 text-sm mb-1">{locName}</h4>
                 <div className="text-[10px] text-slate-500 leading-tight">
                   <span className="font-bold text-blue-600">发现 {locExhibits.length} 件展品</span>
-                  {locExhibits.length > 0 && (
-                     <div className="mt-1 flex flex-wrap gap-1">
-                      {locExhibits.slice(0, 3).map(e => (
-                        <span key={e.id} className="bg-slate-100 px-1 rounded truncate max-w-[100px]">{e.name}</span>
-                      ))}
-                      {locExhibits.length > 3 && <span>...</span>}
-                    </div>
-                  )}
                 </div>
               </div>
-            </div>
+
+            </motion.button>
           </div>
         );
       })}
@@ -139,7 +166,6 @@ export default function MuseumSearchApp() {
   const [searchType, setSearchType] = useState<'name' | 'category' | 'source' | 'traits'>('name');
   const [hasMounted, setHasMounted] = useState(false);
   
-  // 视图模式 & 选中的地点
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
@@ -150,7 +176,7 @@ export default function MuseumSearchApp() {
   const filteredExhibits = useMemo(() => {
     if (!hasMounted || !EXHIBITS_DATA) return [];
     
-    // 【修改点1】默认状态逻辑：如果没有搜索词 且 没有选中的地点，返回空数组
+    // 默认空状态
     if (!query.trim() && !selectedLocation) return [];
     
     const lowerQuery = query.toLowerCase().trim();
@@ -173,10 +199,9 @@ export default function MuseumSearchApp() {
         }
       }
 
-      // 2. 地图地点筛选 【修改点3：数据匹配逻辑】
+      // 2. 地图地点筛选
       let matchesLocation = true;
       if (viewMode === 'map' && selectedLocation) {
-        // 使用 includes，这样 "永逝之湖" 可以匹配 "白骨带 - 永逝之湖"
         matchesLocation = source.includes(selectedLocation);
       }
 
@@ -185,17 +210,11 @@ export default function MuseumSearchApp() {
   }, [query, searchType, hasMounted, selectedLocation, viewMode]);
 
   const handleLocateOnMap = (itemSource: string) => {
-    // 尝试在 MAP_LOCATIONS 中找到匹配的 Key
-    // 例如 itemSource 是 "白骨带 - 永逝之湖"，我们要找 "永逝之湖" 这个 Key
     const matchedKey = Object.keys(MAP_LOCATIONS).find(key => itemSource.includes(key));
-
     if (matchedKey) {
       setSelectedLocation(matchedKey);
       setViewMode('map');
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      // 如果找不到坐标，提示一下（或者静默失败）
-      // alert(`暂无该地点地图数据`);
     }
   };
 
@@ -205,28 +224,47 @@ export default function MuseumSearchApp() {
     <div className="min-h-screen bg-slate-50 pb-20 font-sans">
       <div className="max-w-5xl mx-auto px-4 pt-4 md:pt-8">
         
-        {/* 【修改点2】顶部 Banner 图片还原 */}
-        <div className="flex justify-center mb-6">
-          <a href="/" className="block w-[70%] md:w-[40%] aspect-[3/1] relative overflow-hidden rounded-xl shadow-sm border border-slate-100 bg-white hover:shadow-md transition-all">
-             <img src="/banner.png" alt="双点博物馆展品库" className="w-full h-full object-contain" />
-          </a>
+        {/* Header 区域 */}
+        <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
+           {/* 左侧：标题与统计 */}
+           <div className="flex flex-col gap-2 w-full md:w-auto">
+             <h1 className="text-3xl md:text-4xl font-black text-slate-900">
+               双点博物馆 <span className="text-blue-600">档案库</span>
+             </h1>
+             
+             {/* === 布局调整 ===
+                切换按钮（Switch）现在位于统计文字下方
+             */}
+             <div className="flex flex-col items-start gap-3">
+               <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
+                   已收录 {EXHIBITS_DATA.length} 件展品
+               </p>
+               
+               {/* 切换开关组件 */}
+               <div className="bg-slate-200/50 p-1 rounded-lg flex relative h-9 w-48">
+                 <div 
+                   className={`absolute top-1 bottom-1 w-[48%] bg-white rounded shadow-sm transition-all duration-300 ease-out ${viewMode === 'list' ? 'left-1' : 'left-[50%]'}`}
+                 />
+                 <button 
+                   onClick={() => setViewMode('list')}
+                   className={`relative z-10 flex-1 flex items-center justify-center gap-2 text-xs font-bold transition-colors ${viewMode === 'list' ? 'text-blue-600' : 'text-slate-500'}`}
+                 >
+                   <List size={14} /> 列表
+                 </button>
+                 <button 
+                   onClick={() => setViewMode('map')}
+                   className={`relative z-10 flex-1 flex items-center justify-center gap-2 text-xs font-bold transition-colors ${viewMode === 'map' ? 'text-blue-600' : 'text-slate-500'}`}
+                 >
+                   <MapIcon size={14} /> 地图
+                 </button>
+               </div>
+             </div>
+           </div>
         </div>
 
-        {/* 标题 */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl md:text-4xl font-black text-slate-900 mb-2">
-            双点博物馆 <span className="text-blue-600">档案库</span>
-          </h1>
-          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">
-             已收录 {EXHIBITS_DATA.length} 件展品
-          </p>
-        </div>
-
-        {/* 搜索控制台 */}
+        {/* 搜索控制台 (原本右侧的 Toggle 已移除) */}
         <div className="sticky top-4 z-50 mb-8">
           <div className="bg-white p-2 rounded-2xl shadow-xl border border-slate-200 flex flex-col md:flex-row gap-2">
-            
-            {/* 左侧：搜索输入 */}
             <div className="flex-1 flex gap-2">
                <select
                 className="pl-3 pr-8 py-3 rounded-xl bg-slate-50 font-bold text-xs text-slate-600 focus:ring-2 focus:ring-blue-500 outline-none"
@@ -248,25 +286,6 @@ export default function MuseumSearchApp() {
                 />
               </div>
             </div>
-
-            {/* 右侧：模式切换开关 */}
-            <div className="bg-slate-100 p-1 rounded-xl flex shrink-0 relative w-full md:w-auto h-12 md:h-auto">
-               <div 
-                 className={`absolute top-1 bottom-1 w-[48%] bg-white rounded-lg shadow-sm transition-all duration-300 ease-out ${viewMode === 'list' ? 'left-1' : 'left-[50%]'}`}
-               />
-               <button 
-                 onClick={() => setViewMode('list')}
-                 className={`relative z-10 flex-1 px-4 md:px-6 py-2 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors ${viewMode === 'list' ? 'text-blue-600' : 'text-slate-500'}`}
-               >
-                 <List size={14} /> 列表
-               </button>
-               <button 
-                 onClick={() => setViewMode('map')}
-                 className={`relative z-10 flex-1 px-4 md:px-6 py-2 rounded-lg flex items-center justify-center gap-2 text-xs font-bold transition-colors ${viewMode === 'map' ? 'text-blue-600' : 'text-slate-500'}`}
-               >
-                 <MapIcon size={14} /> 地图
-               </button>
-            </div>
           </div>
         </div>
 
@@ -282,13 +301,15 @@ export default function MuseumSearchApp() {
                 activeLocation={selectedLocation}
                 onLocationSelect={setSelectedLocation}
               />
+              
+              {/* 选中地点后的信息条 */}
               {selectedLocation && (
                  <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-center justify-between animate-in slide-in-from-top-2">
                     <span className="text-sm font-bold text-blue-800">当前筛选地点: <span className="text-black">{selectedLocation}</span></span>
                     <button onClick={() => setSelectedLocation(null)} className="text-xs text-blue-500 hover:text-blue-700 font-bold px-3 py-1 bg-white rounded-lg shadow-sm">显示全部</button>
                  </div>
               )}
-              {/* 地图模式下也显示下方的列表，展示当前筛选结果 */}
+              
               <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                  {filteredExhibits.map(item => (
                     <ExhibitCard 
@@ -309,7 +330,6 @@ export default function MuseumSearchApp() {
           {/* 列表模式 */}
           {viewMode === 'list' && (
              <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden min-h-[300px]">
-                {/* 默认空状态：没有搜索 且 没有结果 */}
                 {!query && filteredExhibits.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-24 text-slate-300">
                     <Sparkles className="w-16 h-16 mb-4 opacity-50 text-blue-200" />
@@ -338,15 +358,13 @@ export default function MuseumSearchApp() {
 
         </div>
 
-        {/* 【修改点2】底部 Footer 还原 */}
+        {/* Footer */}
         <footer className="mt-12 pb-8 text-center border-t border-slate-200 pt-6">
           <p className="text-slate-300 text-[10px] mb-4 uppercase tracking-widest font-sans">Exhibit Guide System | 仅供参考</p>
           <div className="inline-flex flex-col sm:flex-row items-center gap-2 px-5 py-2.5 bg-white rounded-xl border border-slate-100 shadow-sm">
             <span className="text-slate-600 font-bold text-sm">
               欢迎关注 <a href="https://xhslink.com/m/4fdFysr8G7t" target="_blank" rel="noopener noreferrer" className="text-red-500 hover:text-red-600">悦小白游戏记</a>
             </span>
-            <span className="hidden sm:block text-slate-200">|</span>
-            <span className="text-slate-400 font-medium text-xs font-sans">小红书 @悦小白游戏记</span>
           </div>
         </footer>
 
@@ -355,7 +373,7 @@ export default function MuseumSearchApp() {
   );
 }
 
-/* ================= 卡片组件 ================= */
+/* ================= 卡片组件 (保持不变) ================= */
 function ExhibitCard({ 
   data, 
   keyword,
@@ -365,14 +383,11 @@ function ExhibitCard({
   keyword: string; 
   onLocate: () => void;
 }) {
-  // 查找匹配的地图 Key (模糊匹配)
   const mapKey = Object.keys(MAP_LOCATIONS).find(key => data.source?.includes(key));
   const location = mapKey ? MAP_LOCATIONS[mapKey] : null;
 
   return (
     <div className="group p-5 hover:bg-slate-50 transition-colors flex gap-4 items-start">
-      
-      {/* 缩略图逻辑：如果有对应地图位置，显示红圈小地图；否则显示类别图标 */}
       <div 
         onClick={(e) => { 
           if(location) {
@@ -390,12 +405,9 @@ function ExhibitCard({
              <img 
                src="/map.jpg" 
                className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" 
-               style={{ 
-                 objectPosition: `${location.left} ${location.top}` 
-               }}
+               style={{ objectPosition: `${location.left} ${location.top}` }}
              />
              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-8 h-8 rounded-full border-2 border-red-500 bg-red-500/20 animate-ping absolute" />
                 <div className="w-2 h-2 rounded-full bg-red-600 relative z-10 shadow-sm" />
              </div>
           </div>
