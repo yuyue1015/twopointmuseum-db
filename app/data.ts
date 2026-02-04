@@ -23,22 +23,22 @@ export const EXHIBITS_DATA: Exhibit[] = [
   { id: "5", name: "软盘化石", category: "史前", subcategory: "化石", traits: ["无"], description: "", source: "白骨带 - 焦油旷野", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "6", name: "异星化石", category: "史前", subcategory: "化石", traits: ["无"], description: "", source: "白骨带 - 焦油旷野", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "7", name: "甲壳化石", category: "史前", subcategory: "化石", traits: ["无"], description: "", source: "白骨带 - 焦油旷野", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  // --- 史前 / 恐龙骨骼 ---
-  { id: "8", name: "小恶龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["特别访客加成"], description: "", source: "白骨带 - 飞龙之路", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "9", name: "恶龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["特别访客加成", "腹泻的幽默"], description: "", source: "白骨带 - 阴云山", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "10", name: "双头斗龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 庞然巨岩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "11", name: "皇冠霸王龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 霸王龙岩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "12", name: "独角骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 终焉之境", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "13", name: "霸王蝎短尾翼独角龙", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 终焉之境", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "14", name: "多头水龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无", "腹泻的幽默"], description: "好笑的惊吓方式，轻微影响肠胃舒适度", source: "双点海, 白骨带 - 永逝之湖, 浸水岩洞", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "15", name: "雪嚎龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 冰霜之巅", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "16", name: "咬咬龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 啃噬之森", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "17", name: "指挥家巨蟒骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 腐臭小径", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "18", name: "振翅翼龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无", "腹泻的幽默"], description: "好笑的惊吓方式，轻微影响肠胃舒适度", source: "白骨带 - 腐臭小径", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "19", name: "迅爬龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 凋零之路", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "20", name: "尖背龙骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 肋骨荒原", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "21", name: "石甲犰狳骨架", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "白骨带 - 肋骨荒原", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
-  { id: "22", name: "鳄龙骨", category: "史前", subcategory: "恐龙骨骼", traits: ["无"], description: "", source: "双点海 - 白骨浅滩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  // --- 史前 / 恐龙骨架 ---
+  { id: "8", name: "小恶龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["特别访客加成"], description: "", source: "白骨带 - 飞龙之路", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "9", name: "恶龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["特别访客加成", "腹泻的幽默"], description: "", source: "白骨带 - 阴云山", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "10", name: "双头斗龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 庞然巨岩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "11", name: "皇冠霸王龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 霸王龙岩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "12", name: "独角骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 终焉之境", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "13", name: "霸王蝎短尾翼独角龙", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 终焉之境", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "14", name: "多头水龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无", "腹泻的幽默"], description: "好笑的惊吓方式，轻微影响肠胃舒适度", source: "双点海, 白骨带 - 永逝之湖, 浸水岩洞", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "15", name: "雪嚎龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 冰霜之巅", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "16", name: "咬咬龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 啃噬之森", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "17", name: "指挥家巨蟒骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 腐臭小径", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "18", name: "振翅翼龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无", "腹泻的幽默"], description: "好笑的惊吓方式，轻微影响肠胃舒适度", source: "白骨带 - 腐臭小径", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "19", name: "迅爬龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 凋零之路", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "20", name: "尖背龙骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 肋骨荒原", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "21", name: "石甲犰狳骨架", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "白骨带 - 肋骨荒原", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "22", name: "鳄龙骨", category: "史前", subcategory: "恐龙骨架", traits: ["无"], description: "", source: "双点海 - 白骨浅滩", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   // --- 史前 / 封存文物 ---
   { id: "23", name: "恐龙琥珀", category: "史前", subcategory: "封存文物", traits: ["无"], description: "", source: "白骨带 - 远古淡黄穹顶", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "24", name: "暴爬龙琥珀", category: "史前", subcategory: "封存文物", traits: ["无"], description: "", source: "白骨带 - 远古淡黄穹顶", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
@@ -60,7 +60,7 @@ export const EXHIBITS_DATA: Exhibit[] = [
   { id: "38", name: "孤独的石碑", category: "史前", subcategory: "史前奥秘", traits: ["史前奥秘"], description: "有来自其他时空或地点的古怪标记", source: "白骨带 - 迷乱沙丘", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "39", name: "远古虚构解剖器", category: "史前", subcategory: "史前奥秘", traits: [], description: "", source: "其他", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   // --- 史前 / 古代发明 ---
-  { id: "40", name: "熔岩灯", category: "史前", subcategory: "古代发明", traits: ["望而生畏", "有趣", "令人好奇的"], description: "可对犯罪行动产生震慑效果,提升访客的娱乐度,提供的知识额外+1", source: "双点海, 白骨带 - 火山温泉, 蛮荒峭壁", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "40", name: "熔岩灯", category: "史前", subcategory: "古代发明", traits: ["望而生畏", "有趣", "令人好奇的"], description: "可对犯罪行动产生震慑效果,提升访客的娱乐度,提供的知识额外+1", source: "双点海, 白骨带 - 火山温泉, 荒蛮峭壁", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "41", name: "石制音响", category: "史前", subcategory: "古代发明", traits: ["望而生畏", "有趣", "令人好奇的"], description: "可对犯罪行动产生震慑效果,提升访客的娱乐度,提供的知识额外+1", source: "白骨带 - 白费镇与徒劳镇的交界之地", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "42", name: "岩石躺椅", category: "史前", subcategory: "古代发明", traits: ["望而生畏", "有趣", "令人好奇的"], description: "可对犯罪行动产生震慑效果,提升访客的娱乐度,提供的知识额外+1", source: "白骨带 - 白费镇与徒劳镇的交界之地", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "43", name: "原始计算机", category: "史前", subcategory: "古代发明", traits: ["望而生畏", "有趣", "令人好奇的"], description: "可对犯罪行动产生震慑效果,提升访客的娱乐度,提供的知识额外+1", source: "白骨带 - 白费镇与徒劳镇的交界之地", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
@@ -83,7 +83,7 @@ export const EXHIBITS_DATA: Exhibit[] = [
   { id: "57", name: "壶龙果", category: "自然", subcategory: "食用植物", traits: ["壶龙果", "生老病死"], description: "增加喝饱度，但减少肠胃舒适度,健康度降至0%时会死亡/枯萎", source: "白骨带 - 沉寂河流", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "58", name: "刺头梨", category: "自然", subcategory: "食用植物", traits: ["刺头果"], description: "增加吃饱度，但减少肠胃舒适度", source: "低端科技地穴 - 植地实验室", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   // --- 自然 / 高山植物 ---
-  { id: "59", name: "爬山花", category: "自然", subcategory: "高山植物", traits: ["生老病死"], description: "健康度降至0%时会死亡/枯萎", source: "白骨带 - 蛮荒峭壁", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
+  { id: "59", name: "爬山花", category: "自然", subcategory: "高山植物", traits: ["生老病死"], description: "健康度降至0%时会死亡/枯萎", source: "白骨带 - 荒蛮峭壁", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "60", name: "极光树", category: "自然", subcategory: "高山植物", traits: ["生老病死"], description: "健康度降至0%时会死亡/枯萎", source: "白骨带 - 原始边境", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "61", name: "魂树", category: "自然", subcategory: "高山植物", traits: ["生老病死"], description: "健康度降至0%时会死亡/枯萎", source: "冥界 - 迷雾沼泽", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "62", name: "寒椒树", category: "自然", subcategory: "高山植物", traits: ["生老病死", "冰封"], description: "健康度降至0%时会死亡/枯萎,维护度降为0%时会发生融化，解冻的展示品只能进行出售", source: "低端科技地穴, 冥界 - 低温实验室, 寒冰尖塔", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
@@ -410,3 +410,4 @@ export const EXHIBITS_DATA: Exhibit[] = [
   { id: "349", name: "冰封姜饼水晶球", category: "其他", subcategory: "冬季快闪", traits: [], description: "", source: "白骨带", base_buzz: 0, max_buzz: 0, max_knowledge: 0 },
   { id: "350", name: "闪亮煎香肠树", category: "其他", subcategory: "冬季快闪", traits: [], description: "", source: "白骨带", base_buzz: 0, max_buzz: 0, max_knowledge: 0 }
 ];
+
