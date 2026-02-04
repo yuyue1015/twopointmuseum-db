@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { Search, MapPin, Tag, Sparkles, Map as MapIcon, List, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // ⚠️ 请确保这个路径正确指向你刚才创建的文件
-import HandDrawnCircle from '@/components/HandDrawnCircle'; 
+import HandDrawnCircle from '../components/HandDrawnCircle'; 
 import { EXHIBITS_DATA, Exhibit } from './data';
 
 /* ================= 1. 坐标配置系统 ================= */
@@ -444,3 +444,4 @@ function ExhibitCard({
     </div>
   );
 }
+
