@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { Search, MapPin, Tag, Sparkles, Map as MapIcon, List, Info, XCircle } from 'lucide-react';
+import { Search, MapPin, Tag, Sparkles, Map as MapIcon, List, Info, XCircle, Globe, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // ⚠️ 确保路径正确
 import HandDrawnCircle from '../components/HandDrawnCircle'; 
@@ -10,12 +10,12 @@ import { EXHIBITS_DATA, Exhibit } from './data';
 /* ================= 1. 坐标配置系统 ================= */
 const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '永逝之湖': { top: '12%', left: '22%' },
-  '迷乱沙丘': { top: '33%', left: '31%' },
+  '迷乱沙丘': { top: '33%', left: '32%' },
   '焦油旷野': { top: '15%', left: '12%' },
   '冰霜之巅': { top: '10%', left: '54%' },
   '原始边境': { top: '13%', left: '68%' },
-  '大脚花园': { top: '23%', left: '78%' },
-  '食人花丛林': { top: '8%', left: '83%' },
+  '大脚花园': { top: '23%', left: '77%' },
+  '食人花丛林': { top: '8%', left: '84%' },
   '肋骨荒原': { top: '23%', left: '23%' },
   '啃噬之森': { top: '35%', left: '76%' },
   '远古遗迹': { top: '33%', left: '56%' },
@@ -25,13 +25,15 @@ const MAP_LOCATIONS: Record<string, { top: string; left: string }> = {
   '霸王龙岩': { top: '83%', left: '20%' },
   '庞然巨岩': { top: '79%', left: '75%' },
   '草本绿野': { top: '73%', left: '8%' },
-  '隐士山丘': { top: '43%', left: '3%' },
+  '隐士山丘': { top: '45%', left: '3%' },
   '黑糖浆湖': { top: '30%', left: '3%' },
-  '终焉之境': { top: '52%', left: '15%' },
-  '白费镇与徒劳镇的交界之地': { top: '71%', left: '58%' },
+  '终焉之湖': { top: '53%', left: '14%' },
+  '白费镇与徒劳镇的交界之地': { top: '71%', left: '60%' },
   '远古淡黄穹顶': { top: '74%', left: '85%' },
-    '寒冷矿洞': { top: '17%', left: '47%' },
 };
+
+/* ================= 区域配置 ================= */
+const REGIONS = ['白骨带', '双点海', '冥界', '地穴', '宇宙', '焦土', '群岛', '数码'];
 
 /* ================= 工具函数 ================= */
 const getCategoryColor = (category: string) => {
@@ -59,7 +61,7 @@ function highlightText(text: string, keyword: string) {
   );
 }
 
-/* ================= 2. 交互式地图组件 ================= */
+/* ================= 2. 交互式地图组件 (顶部导航版) ================= */
 function InteractiveMap({ 
   query, 
   data, 
@@ -69,87 +71,131 @@ function InteractiveMap({
   query: string; 
   data: Exhibit[]; 
   activeLocation: string | null;
-  onLocationSelect: (loc: string) => void;
+  onLocationSelect: (loc: string | null) => void;
 }) {
+  const [currentRegion, setCurrentRegion] = useState('白骨带');
+
+  const handleRegionChange = (region: string) => {
+    setCurrentRegion(region);
+    onLocationSelect(null);
+  };
+
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden shadow-xl border-4 border-slate-800/10 bg-slate-100 select-none">
-      <img src="/map.jpg" alt="Map" className="w-full h-auto object-cover opacity-80" />
+    // 改为 flex-col (垂直布局)，让导航栏在上面
+    <div className="flex flex-col w-full rounded-2xl overflow-hidden shadow-xl border-4 border-slate-800/10 bg-slate-100 select-none min-h-[500px]">
       
-      {Object.entries(MAP_LOCATIONS).map(([locName, coords]) => {
-        const locExhibits = data.filter(i => i.source?.includes(locName));
-        const hasResults = locExhibits.length > 0;
-        const isSelected = activeLocation === locName;
-        const isSearchMatch = query.length > 0 && hasResults;
-        
-        if (query && !hasResults && !isSelected) return null;
-
-        return (
-          <div
-            key={locName}
-            className="absolute z-10 flex items-center justify-center"
-            style={{ top: coords.top, left: coords.left }}
+      {/* 顶部：区域导航标签栏 */}
+      {/* 样式说明：
+          flex-row: 横向排列
+          justify-center: 居中对齐
+          overflow-x-auto: 防止小屏幕溢出（虽然居中，但小屏幕会自动开启横向滚动）
+      */}
+      <div className="w-full flex-none bg-slate-200 border-b border-slate-300 flex flex-row items-center justify-center p-2 gap-2 overflow-x-auto no-scrollbar">
+        {REGIONS.map((region) => (
+          <button
+            key={region}
+            onClick={() => handleRegionChange(region)}
+            className={`
+              shrink-0 w-20 py-2 text-xs md:text-sm font-bold transition-all rounded-lg
+              flex flex-col items-center justify-center gap-1
+              /* 选中样式：白底、文字蓝、底部蓝线 */
+              ${currentRegion === region 
+                ? 'bg-white text-blue-600 shadow-sm ring-2 ring-blue-100' 
+                : 'text-slate-500 hover:bg-slate-300/50 hover:text-slate-700'
+              }
+            `}
           >
-             {/* 搜索高亮手绘圈 */}
-             <AnimatePresence>
-               {isSearchMatch && !isSelected && (
-                 <div className="absolute inset-0 pointer-events-none">
-                    <HandDrawnCircle isSelected={false} />
-                 </div>
-               )}
-             </AnimatePresence>
+            {region === '白骨带' ? <MapIcon size={14} /> : <Globe size={14} className="opacity-50"/>}
+            <span>{region}</span>
+          </button>
+        ))}
+      </div>
 
-            <motion.button
-              onClick={() => onLocationSelect(locName)}
-              className="relative w-5 h-5 md:w-10 md:h-10 rounded-full flex items-center justify-center focus:outline-none z-20 group/pin"
-              initial={false}
-              whileHover={{ scale: 1.4 }} 
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            >
-              {/* 交互点：极高透明度 */}
-              <div className={`absolute inset-0 rounded-full backdrop-blur-[1px] border shadow-sm transition-colors duration-300
-                 ${isSelected ? 'bg-transparent border-transparent' : 'bg-white/5 border-white/10 hover:bg-white/10'}`} 
-              />
+      {/* 下方：地图展示区域 */}
+      <div className="flex-1 relative bg-slate-100 flex items-center justify-center overflow-hidden">
+        
+        {currentRegion === '白骨带' ? (
+          <>
+            <img src="/map.jpg" alt="Map" className="w-full h-full object-cover opacity-80" />
+            
+            {Object.entries(MAP_LOCATIONS).map(([locName, coords]) => {
+              const locExhibits = data.filter(i => i.source?.includes(locName));
+              const hasResults = locExhibits.length > 0;
+              const isSelected = activeLocation === locName;
+              const isSearchMatch = query.length > 0 && hasResults;
               
-              {/* 选中状态手绘圈 */}
-              <AnimatePresence>
-                {isSelected && (
-                  <motion.div 
-                    className="absolute inset-0"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                  >
-                     <HandDrawnCircle isSelected={true} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              if (query && !hasResults && !isSelected) return null;
 
-              {/* ★★★ 修复后的 Tooltip (信息框) ★★★
-                  1. 位置：left-full (右侧)
-                  2. 样式：bg-white (纯白底), border-l-4 (左侧蓝条), border-slate-100 (外边框), shadow-xl (阴影)
-                  3. 交互：group-hover/pin 显示，isSelected 常显
-              */}
-              <div className={`
-                absolute left-full top-1/2 ml-3 -translate-y-1/2 w-32 md:w-48 z-50
-                bg-white rounded-xl p-2 md:p-3 
-                shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] 
-                border border-slate-100 border-l-4 border-l-blue-500 
-                origin-left transition-all duration-200 text-left
-                ${isSelected 
-                   ? 'opacity-100 scale-100 visible' 
-                   : 'opacity-0 scale-90 invisible group-hover/pin:opacity-100 group-hover/pin:scale-100 group-hover/pin:visible'
-                }
-              `}>
-                <h4 className="font-black text-slate-800 text-xs md:text-sm mb-1 truncate">{locName}</h4>
-                <div className="text-[10px] text-slate-500 leading-tight">
-                  <span className="font-bold text-blue-600">发现 {locExhibits.length} 件</span>
+              return (
+                <div
+                  key={locName}
+                  className="absolute z-10 flex items-center justify-center"
+                  style={{ top: coords.top, left: coords.left }}
+                >
+                   <AnimatePresence>
+                     {isSearchMatch && !isSelected && (
+                       <div className="absolute inset-0 pointer-events-none">
+                          <HandDrawnCircle isSelected={false} />
+                       </div>
+                     )}
+                   </AnimatePresence>
+
+                  <motion.button
+                    onClick={() => onLocationSelect(locName)}
+                    className="relative w-5 h-5 md:w-10 md:h-10 rounded-full flex items-center justify-center focus:outline-none z-20 group/pin"
+                    initial={false}
+                    whileHover={{ scale: 1.4 }} 
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                  >
+                    <div className={`absolute inset-0 rounded-full backdrop-blur-[1px] border shadow-sm transition-colors duration-300
+                       ${isSelected ? 'bg-transparent border-transparent' : 'bg-white/5 border-white/10 hover:bg-white/10'}`} 
+                    />
+                    
+                    <AnimatePresence>
+                      {isSelected && (
+                        <motion.div 
+                          className="absolute inset-0"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                        >
+                           <HandDrawnCircle isSelected={true} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+                    {/* Tooltip (保持之前的卡片样式) */}
+                    <div className={`
+                      absolute left-full top-1/2 ml-3 -translate-y-1/2 w-32 md:w-48 z-50
+                      bg-white rounded-xl p-2 md:p-3 
+                      shadow-[0_10px_25px_-5px_rgba(0,0,0,0.1),0_8px_10px_-6px_rgba(0,0,0,0.1)] 
+                      border border-slate-100 border-l-4 border-l-blue-500 
+                      origin-left transition-all duration-200 text-left
+                      ${isSelected 
+                         ? 'opacity-100 scale-100 visible' 
+                         : 'opacity-0 scale-90 invisible group-hover/pin:opacity-100 group-hover/pin:scale-100 group-hover/pin:visible'
+                      }
+                    `}>
+                      <h4 className="font-black text-slate-800 text-xs md:text-sm mb-1 truncate">{locName}</h4>
+                      <div className="text-[10px] text-slate-500 leading-tight">
+                        <span className="font-bold text-blue-600">发现 {locExhibits.length} 件</span>
+                      </div>
+                    </div>
+                  </motion.button>
                 </div>
-              </div>
-            </motion.button>
+              );
+            })}
+          </>
+        ) : (
+          /* 非"白骨带"区域显示待更新 */
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 bg-slate-50">
+             <Layers size={64} className="mb-4 text-slate-300" strokeWidth={1} />
+             <p className="text-xl md:text-2xl font-black text-slate-500 tracking-widest">待更新</p>
+             <p className="text-xs md:text-sm mt-2 text-slate-400 font-medium">Coming Soon...</p>
           </div>
-        );
-      })}
+        )}
+      </div>
     </div>
   );
 }
@@ -448,4 +494,3 @@ function ExhibitCard({
     </div>
   );
 }
-
